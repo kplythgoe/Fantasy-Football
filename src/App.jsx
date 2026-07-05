@@ -52,8 +52,6 @@ export default function App() {
     fetchPlayerData();
   }, []);
 
-  console.log(squad);
-
   return (
     <div>
       <Header />
@@ -74,6 +72,7 @@ export default function App() {
           setMainSearch={setMainSearch}
           choiceType={choiceType}
           setChoiceType={setChoiceType}
+          squad={squad}
         />
       </div>
     </div>
@@ -330,7 +329,13 @@ function PlayerSelection({
   );
 }
 
-function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
+function PitchView({
+  playersSelected,
+  amount,
+  setMainSearch,
+  setChoiceType,
+  squad,
+}) {
   return (
     <div className="pitch-view-box">
       <div className="pitch-view-box-intro">
@@ -359,13 +364,17 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setChoiceType={setChoiceType}
               position={"Goalkeepers"}
               pos_id={1}
+              squad={squad}
+              icon_id={1}
             />
             <PlayerPosition
               pos={"GKP"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Goalkeepers"}
-              pos_id={2}
+              pos_id={1}
+              squad={squad}
+              icon_id={2}
             />
           </div>
           <div className="pitch-section-defenders pitch-section">
@@ -374,35 +383,45 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={3}
+              pos_id={2}
+              squad={squad}
+              icon_id={1}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={4}
+              pos_id={2}
+              squad={squad}
+              icon_id={2}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={5}
+              pos_id={2}
+              squad={squad}
+              icon_id={3}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={6}
+              pos_id={2}
+              squad={squad}
+              icon_id={4}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={7}
+              pos_id={2}
+              squad={squad}
+              icon_id={5}
             />
           </div>
           <div className="pitch-section-midfielders pitch-section">
@@ -411,35 +430,45 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={8}
+              pos_id={3}
+              squad={squad}
+              icon_id={1}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={9}
+              pos_id={3}
+              squad={squad}
+              icon_id={2}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={10}
+              pos_id={3}
+              squad={squad}
+              icon_id={3}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={11}
+              pos_id={3}
+              squad={squad}
+              icon_id={4}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={12}
+              pos_id={3}
+              squad={squad}
+              icon_id={5}
             />
           </div>
           <div className="pitch-section-forwards pitch-section">
@@ -448,21 +477,27 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Forwards"}
-              pos_id={13}
+              pos_id={4}
+              squad={squad}
+              icon_id={1}
             />
             <PlayerPosition
               pos={"FOR"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Forwards"}
-              pos_id={14}
+              pos_id={4}
+              squad={squad}
+              icon_id={2}
             />
             <PlayerPosition
               pos={"FOR"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Forwards"}
-              pos_id={15}
+              pos_id={4}
+              squad={squad}
+              icon_id={3}
             />
           </div>
         </div>
@@ -477,7 +512,11 @@ function PlayerPosition({
   setMainSearch,
   position,
   pos_id,
+  squad,
+  icon_id,
 }) {
+  const positionKey = positionMap[pos_id];
+
   return (
     <div className="player-position">
       <button
@@ -499,8 +538,31 @@ function PlayerPosition({
         >
           <path d="M10.182 5.818a2.908 2.908 0 1 0 0-5.818 2.908 2.908 0 1 0 0 5.818ZM3.636 4.364V2.182H2.182v2.182H0v1.454h2.182V8h1.454V5.818h2.182V4.364H3.636Zm6.546 2.909c-1.942 0-5.818.974-5.818 2.909v1.454H16v-1.454c0-1.935-3.876-2.91-5.818-2.91Z"></path>
         </svg>
-        <span>{pos}</span>
+        {squad[positionKey][icon_id - 1] === null ? (
+          <span>{pos}</span>
+        ) : (
+          <PlayerIcon player={squad[positionKey][icon_id - 1]} />
+        )}
       </button>
+    </div>
+  );
+}
+
+function PlayerIcon({ player }) {
+  console.log(player);
+  return (
+    <div className="player-inner-icon">
+      <div className="player-icon-cost">
+        <p>£{(player.now_cost / 10).toFixed(1)}m</p>
+      </div>
+      <div className="player-icon-kit">
+        <img
+          src={`../src/assets/${player.element_type === 1 ? "gk_shirts" : "outfield_shirts"}/${player.team_code}.webp`}
+        />
+      </div>
+      <div className="player-icon-name">
+        <p>{player.web_name}</p>
+      </div>
     </div>
   );
 }

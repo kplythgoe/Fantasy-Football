@@ -624,6 +624,7 @@ button {
   justify-content: center;
   align-items: center;
   transition: background-color 0.3s ease-in-out;
+  padding: 0px;
 }
 
 .player-position button:hover {
@@ -665,4 +666,41 @@ button {
 .pitch-section-forwards {
   padding-inline: 15%;
   padding-top: 24px;
+}
+
+.player-inner-icon img {
+  margin: 0 auto;
+  height: 77px;
+}
+
+.player-inner-icon div {
+  text-align: center;
+}
+
+.player-icon-cost {
+  padding: 5px 0;
+  box-sizing: border-box;
+}
+
+.player-icon-cost p {
+  font-weight: 600;
+  color: #fff;
+  font-size: 14px;
+}
+
+.player-icon-name {
+  background: #fff;
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px 0px;
+  box-sizing: border-box;
+}
+
+.player-icon-name p {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.player-inner-icon {
+  width: 100%;
 }
