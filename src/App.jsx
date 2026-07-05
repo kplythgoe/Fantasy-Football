@@ -19,10 +19,25 @@ const statLabels = {
   red_cards: "RC",
 };
 
+const positionMap = {
+  1: "goalkeeper",
+  2: "defender",
+  3: "midfielder",
+  4: "forward",
+};
+
+const initialSquad = {
+  goalkeeper: [null, null], // 2 slots
+  defender: [null, null, null, null, null], // 5 slots
+  midfielder: [null, null, null, null, null], // 5 slots
+  forward: [null, null, null], // 3 slots
+};
+
 export default function App() {
   const [data, setData] = useState(null);
   const [amount, setAmount] = useState(100);
   const [playersSelected, setPlayersSelected] = useState(0);
+  const [squad, setSquad] = useState(initialSquad);
 
   const [mainSearch, setMainSearch] = useState(["all players"]);
   const [choiceType, setChoiceType] = useState("position");
@@ -37,6 +52,8 @@ export default function App() {
     fetchPlayerData();
   }, []);
 
+  console.log(squad);
+
   return (
     <div>
       <Header />
@@ -48,6 +65,7 @@ export default function App() {
           setMainSearch={setMainSearch}
           choiceType={choiceType}
           setChoiceType={setChoiceType}
+          setSquad={setSquad}
         />
         <PitchView
           playersSelected={playersSelected}
@@ -91,6 +109,7 @@ function PlayerSelection({
   setMainSearch,
   choiceType,
   setChoiceType,
+  setSquad,
 }) {
   const [playerSearch, setPlayerSearch] = useState("");
   const [searchModal, setSearchModal] = useState(false);
@@ -304,6 +323,7 @@ function PlayerSelection({
           sortBy={sortBy}
           playerSearch={playerSearch}
           amount={amount}
+          setSquad={setSquad}
         />
       </div>
     </div>
@@ -345,7 +365,7 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Goalkeepers"}
-              pos_id={1}
+              pos_id={2}
             />
           </div>
           <div className="pitch-section-defenders pitch-section">
@@ -354,35 +374,35 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={2}
+              pos_id={3}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={2}
+              pos_id={4}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={2}
+              pos_id={5}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={2}
+              pos_id={6}
             />
             <PlayerPosition
               pos={"DEF"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Defenders"}
-              pos_id={2}
+              pos_id={7}
             />
           </div>
           <div className="pitch-section-midfielders pitch-section">
@@ -391,35 +411,35 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={3}
+              pos_id={8}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={3}
+              pos_id={9}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={3}
+              pos_id={10}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={3}
+              pos_id={11}
             />
             <PlayerPosition
               pos={"MID"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Midfielders"}
-              pos_id={3}
+              pos_id={12}
             />
           </div>
           <div className="pitch-section-forwards pitch-section">
@@ -428,21 +448,21 @@ function PitchView({ playersSelected, amount, setMainSearch, setChoiceType }) {
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Forwards"}
-              pos_id={4}
+              pos_id={13}
             />
             <PlayerPosition
               pos={"FOR"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Forwards"}
-              pos_id={4}
+              pos_id={14}
             />
             <PlayerPosition
               pos={"FOR"}
               setMainSearch={setMainSearch}
               setChoiceType={setChoiceType}
               position={"Forwards"}
-              pos_id={4}
+              pos_id={15}
             />
           </div>
         </div>
@@ -501,6 +521,7 @@ function PlayerOutput({
   sortBy,
   playerSearch,
   amount,
+  setSquad,
 }) {
   const Component = componentMap[mainSearch[0]];
   const normaliseText = (text) =>
@@ -517,6 +538,7 @@ function PlayerOutput({
       mainSearch={mainSearch}
       playerSearch={playerSearch}
       normaliseText={normaliseText}
+      setSquad={setSquad}
     />
   ) : (
     <TeamChoiceList
@@ -527,6 +549,7 @@ function PlayerOutput({
       playerSearch={playerSearch}
       normaliseText={normaliseText}
       amount={amount}
+      setSquad={setSquad}
     />
   );
 }
@@ -538,6 +561,7 @@ function AllPlayers({
   playerSearch,
   amount,
   normaliseText,
+  setSquad,
 }) {
   return (
     <div className="all-players-list">
@@ -548,6 +572,7 @@ function AllPlayers({
         playerSearch={playerSearch}
         normaliseText={normaliseText}
         amount={amount}
+        setSquad={setSquad}
       />
       <DefendersList
         data={data}
@@ -556,6 +581,7 @@ function AllPlayers({
         playerSearch={playerSearch}
         normaliseText={normaliseText}
         amount={amount}
+        setSquad={setSquad}
       />
       <MidfieldersList
         data={data}
@@ -564,6 +590,7 @@ function AllPlayers({
         playerSearch={playerSearch}
         normaliseText={normaliseText}
         amount={amount}
+        setSquad={setSquad}
       />
       <ForwardsList
         data={data}
@@ -572,6 +599,7 @@ function AllPlayers({
         playerSearch={playerSearch}
         normaliseText={normaliseText}
         amount={amount}
+        setSquad={setSquad}
       />
     </div>
   );
@@ -585,6 +613,7 @@ function GoalkeepersList({
   playerSearch,
   normaliseText,
   amount,
+  setSquad,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -622,6 +651,7 @@ function GoalkeepersList({
             key={player.id}
             sortBy={sortBy}
             amount={amount}
+            setSquad={setSquad}
           />
         ))}
       </div>
@@ -637,6 +667,7 @@ function DefendersList({
   playerSearch,
   normaliseText,
   amount,
+  setSquad,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -675,6 +706,7 @@ function DefendersList({
             key={player.id}
             sortBy={sortBy}
             amount={amount}
+            setSquad={setSquad}
           />
         ))}
       </div>
@@ -690,6 +722,7 @@ function MidfieldersList({
   playerSearch,
   normaliseText,
   amount,
+  setSquad,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -728,6 +761,7 @@ function MidfieldersList({
             key={player.id}
             sortBy={sortBy}
             amount={amount}
+            setSquad={setSquad}
           />
         ))}
       </div>
@@ -743,6 +777,7 @@ function ForwardsList({
   playerSearch,
   normaliseText,
   amount,
+  setSquad,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -781,6 +816,7 @@ function ForwardsList({
             key={player.id}
             sortBy={sortBy}
             amount={amount}
+            setSquad={setSquad}
           />
         ))}
       </div>
@@ -796,6 +832,7 @@ function TeamChoiceList({
   amount,
   playerSearch,
   normaliseText,
+  setSquad,
 }) {
   const team = data?.teams.find((team) => team.name === mainSearch[0]);
   const teamCode = team?.code;
@@ -809,6 +846,7 @@ function TeamChoiceList({
         amount={amount}
         normaliseText={normaliseText}
         playerSearch={playerSearch}
+        setSquad={setSquad}
       />
       <DefendersList
         data={data}
@@ -818,6 +856,7 @@ function TeamChoiceList({
         amount={amount}
         normaliseText={normaliseText}
         playerSearch={playerSearch}
+        setSquad={setSquad}
       />
       <MidfieldersList
         data={data}
@@ -827,6 +866,7 @@ function TeamChoiceList({
         amount={amount}
         normaliseText={normaliseText}
         playerSearch={playerSearch}
+        setSquad={setSquad}
       />
       <ForwardsList
         data={data}
@@ -836,12 +876,34 @@ function TeamChoiceList({
         amount={amount}
         normaliseText={normaliseText}
         playerSearch={playerSearch}
+        setSquad={setSquad}
       />
     </>
   );
 }
 
-function SinglePlayer({ data, player, position, sortBy, amount }) {
+function SinglePlayer({ data, player, position, sortBy, amount, setSquad }) {
+  function addPlayer(player) {
+    const positionKey = positionMap[player.element_type];
+
+    setSquad((prevSquad) => {
+      const currentLine = prevSquad[positionKey];
+
+      // find first empty slot
+      const emptyIndex = currentLine.findIndex((slot) => slot === null);
+
+      // no space available
+      if (emptyIndex === -1) return prevSquad;
+
+      const updatedLine = [...currentLine];
+      updatedLine[emptyIndex] = player;
+
+      return {
+        ...prevSquad,
+        [positionKey]: updatedLine,
+      };
+    });
+  }
   return (
     <div className="single-player">
       <div className="player-info">
@@ -877,7 +939,10 @@ function SinglePlayer({ data, player, position, sortBy, amount }) {
           <p>{player[sortBy]}</p>
         </div>
         <div className="player-add">
-          <button disabled={amount < player.now_cost / 10}>
+          <button
+            disabled={amount < player.now_cost / 10}
+            onClick={() => addPlayer(player)}
+          >
             <svg
               width="16"
               height="16"
