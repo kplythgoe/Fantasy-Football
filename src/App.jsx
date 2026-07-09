@@ -1036,6 +1036,9 @@ function SinglePlayer({ data, player, position, sortBy, amount, setSquad, squad,
 
       return newSquad;
     });
+
+    setAmount(currentAmount => currentAmount + player.now_cost / 10)
+
   }
 
   const playerInSquad = Object.values(squad).some(position =>
