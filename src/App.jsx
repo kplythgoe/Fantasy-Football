@@ -64,6 +64,8 @@ export default function App() {
           choiceType={choiceType}
           setChoiceType={setChoiceType}
           setSquad={setSquad}
+          squad={squad}
+          setAmount={setAmount}
         />
         <PitchView
           playersSelected={playersSelected}
@@ -109,6 +111,8 @@ function PlayerSelection({
   choiceType,
   setChoiceType,
   setSquad,
+  squad,
+  setAmount
 }) {
   const [playerSearch, setPlayerSearch] = useState("");
   const [searchModal, setSearchModal] = useState(false);
@@ -323,6 +327,8 @@ function PlayerSelection({
           playerSearch={playerSearch}
           amount={amount}
           setSquad={setSquad}
+          squad={squad}
+          setAmount={setAmount}
         />
       </div>
     </div>
@@ -584,6 +590,8 @@ function PlayerOutput({
   playerSearch,
   amount,
   setSquad,
+  squad,
+  setAmount,
 }) {
   const Component = componentMap[mainSearch[0]];
   const normaliseText = (text) =>
@@ -601,6 +609,8 @@ function PlayerOutput({
       playerSearch={playerSearch}
       normaliseText={normaliseText}
       setSquad={setSquad}
+      squad={squad}
+      setAmount={setAmount}
     />
   ) : (
     <TeamChoiceList
@@ -612,6 +622,8 @@ function PlayerOutput({
       normaliseText={normaliseText}
       amount={amount}
       setSquad={setSquad}
+      squad={squad}
+      setAmount={setAmount}
     />
   );
 }
@@ -624,6 +636,8 @@ function AllPlayers({
   amount,
   normaliseText,
   setSquad,
+  squad,
+  setAmount,
 }) {
   return (
     <div className="all-players-list">
@@ -635,6 +649,8 @@ function AllPlayers({
         normaliseText={normaliseText}
         amount={amount}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
       />
       <DefendersList
         data={data}
@@ -644,6 +660,9 @@ function AllPlayers({
         normaliseText={normaliseText}
         amount={amount}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
       <MidfieldersList
         data={data}
@@ -653,6 +672,9 @@ function AllPlayers({
         normaliseText={normaliseText}
         amount={amount}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
       <ForwardsList
         data={data}
@@ -662,6 +684,9 @@ function AllPlayers({
         normaliseText={normaliseText}
         amount={amount}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
     </div>
   );
@@ -676,6 +701,8 @@ function GoalkeepersList({
   normaliseText,
   amount,
   setSquad,
+  squad,
+  setAmount,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -714,6 +741,8 @@ function GoalkeepersList({
             sortBy={sortBy}
             amount={amount}
             setSquad={setSquad}
+            squad={squad}
+            setAmount={setAmount}
           />
         ))}
       </div>
@@ -730,6 +759,8 @@ function DefendersList({
   normaliseText,
   amount,
   setSquad,
+  squad,
+  setAmount,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -769,6 +800,8 @@ function DefendersList({
             sortBy={sortBy}
             amount={amount}
             setSquad={setSquad}
+            squad={squad}
+            setAmount={setAmount}
           />
         ))}
       </div>
@@ -785,6 +818,8 @@ function MidfieldersList({
   normaliseText,
   amount,
   setSquad,
+  squad,
+  setAmount,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -824,6 +859,8 @@ function MidfieldersList({
             sortBy={sortBy}
             amount={amount}
             setSquad={setSquad}
+            squad={squad}
+            setAmount={setAmount}
           />
         ))}
       </div>
@@ -840,6 +877,8 @@ function ForwardsList({
   normaliseText,
   amount,
   setSquad,
+  squad,
+  setAmount,
 }) {
   const sortedPlayers = data?.elements
     ?.filter((player) => {
@@ -879,6 +918,8 @@ function ForwardsList({
             sortBy={sortBy}
             amount={amount}
             setSquad={setSquad}
+            squad={squad}
+            setAmount={setAmount}
           />
         ))}
       </div>
@@ -895,6 +936,8 @@ function TeamChoiceList({
   playerSearch,
   normaliseText,
   setSquad,
+  squad,
+  setAmount,
 }) {
   const team = data?.teams.find((team) => team.name === mainSearch[0]);
   const teamCode = team?.code;
@@ -909,6 +952,9 @@ function TeamChoiceList({
         normaliseText={normaliseText}
         playerSearch={playerSearch}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
       <DefendersList
         data={data}
@@ -919,6 +965,9 @@ function TeamChoiceList({
         normaliseText={normaliseText}
         playerSearch={playerSearch}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
       <MidfieldersList
         data={data}
@@ -929,6 +978,9 @@ function TeamChoiceList({
         normaliseText={normaliseText}
         playerSearch={playerSearch}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
       <ForwardsList
         data={data}
@@ -939,12 +991,15 @@ function TeamChoiceList({
         normaliseText={normaliseText}
         playerSearch={playerSearch}
         setSquad={setSquad}
+        squad={squad}
+        setAmount={setAmount}
+
       />
     </>
   );
 }
 
-function SinglePlayer({ data, player, position, sortBy, amount, setSquad }) {
+function SinglePlayer({ data, player, position, sortBy, amount, setSquad, squad, setAmount }) {
   function addPlayer(player) {
     const positionKey = positionMap[player.element_type];
 
@@ -965,7 +1020,27 @@ function SinglePlayer({ data, player, position, sortBy, amount, setSquad }) {
         [positionKey]: updatedLine,
       };
     });
+
+    setAmount(currentAmount => currentAmount - player.now_cost / 10)
   }
+
+  function removePlayer(player) {
+    setSquad(currentSquad => {
+      const newSquad = { ...currentSquad };
+
+      for (const position in newSquad) {
+        newSquad[position] = newSquad[position].map(slot =>
+          slot?.id === player.id ? null : slot
+        );
+      }
+
+      return newSquad;
+    });
+  }
+
+  const playerInSquad = Object.values(squad).some(position =>
+    position.some(p => p?.id === player.id)
+  );
   return (
     <div className="single-player">
       <div className="player-info">
@@ -1001,9 +1076,25 @@ function SinglePlayer({ data, player, position, sortBy, amount, setSquad }) {
           <p>{player[sortBy]}</p>
         </div>
         <div className="player-add">
+          { playerInSquad ? 
+          <button className="remove-player-button" onClick={() => removePlayer(player)}><svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="no8cf40"
+              aria-label="Add player"
+            >
+              <path
+                d="M15.5 7.25V8.75H8.75V15.5H7.25V8.75H0.5V7.25H7.25V0.5H8.75V7.25H15.5Z"
+                fill="currentColor"
+              ></path>
+            </svg></button> : 
           <button
-            disabled={amount < player.now_cost / 10}
+            disabled={amount < player.now_cost / 10 || squad[positionMap[player.element_type]].every(slot => slot !== null)}
             onClick={() => addPlayer(player)}
+            className="add-player-button"
           >
             <svg
               width="16"
@@ -1020,6 +1111,7 @@ function SinglePlayer({ data, player, position, sortBy, amount, setSquad }) {
               ></path>
             </svg>
           </button>
+          }
         </div>
       </div>
     </div>
