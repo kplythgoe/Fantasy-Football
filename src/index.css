@@ -704,3 +704,8 @@ button {
 .player-inner-icon {
   width: 100%;
 }
+
+.player-add button:disabled svg,
+.remove-player-button svg {
+  transform: rotate(45deg);
+}
