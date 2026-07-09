@@ -703,9 +703,27 @@ button {
 
 .player-inner-icon {
   width: 100%;
+  position: relative;
 }
 
 .player-add button:disabled svg,
 .remove-player-button svg {
   transform: rotate(45deg);
+}
+
+.player-inner-icon .remove-this-player {
+  background-color: #37003c;
+  /* width: 20px; */
+  width: fit-content;
+  border-radius: 100%;
+  display: flex;
+  padding: 2px;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.remove-this-player svg {
+  width: 16px !important;
+  height: 16px !important;
 }
