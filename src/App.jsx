@@ -75,6 +75,8 @@ export default function App() {
           choiceType={choiceType}
           setChoiceType={setChoiceType}
           squad={squad}
+          setSquad={setSquad}
+          setAmount={setAmount}
         />
       </div>
     </div>
@@ -341,6 +343,8 @@ function PitchView({
   setMainSearch,
   setChoiceType,
   squad,
+  setSquad,
+  setAmount,
 }) {
   return (
     <div className="pitch-view-box">
@@ -372,6 +376,8 @@ function PitchView({
               pos_id={1}
               squad={squad}
               icon_id={1}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"GKP"}
@@ -381,6 +387,8 @@ function PitchView({
               pos_id={1}
               squad={squad}
               icon_id={2}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
           </div>
           <div className="pitch-section-defenders pitch-section">
@@ -392,6 +400,8 @@ function PitchView({
               pos_id={2}
               squad={squad}
               icon_id={1}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"DEF"}
@@ -401,6 +411,8 @@ function PitchView({
               pos_id={2}
               squad={squad}
               icon_id={2}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"DEF"}
@@ -410,6 +422,8 @@ function PitchView({
               pos_id={2}
               squad={squad}
               icon_id={3}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"DEF"}
@@ -419,6 +433,8 @@ function PitchView({
               pos_id={2}
               squad={squad}
               icon_id={4}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"DEF"}
@@ -428,6 +444,8 @@ function PitchView({
               pos_id={2}
               squad={squad}
               icon_id={5}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
           </div>
           <div className="pitch-section-midfielders pitch-section">
@@ -439,6 +457,8 @@ function PitchView({
               pos_id={3}
               squad={squad}
               icon_id={1}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"MID"}
@@ -448,6 +468,8 @@ function PitchView({
               pos_id={3}
               squad={squad}
               icon_id={2}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"MID"}
@@ -457,6 +479,8 @@ function PitchView({
               pos_id={3}
               squad={squad}
               icon_id={3}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"MID"}
@@ -466,6 +490,8 @@ function PitchView({
               pos_id={3}
               squad={squad}
               icon_id={4}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"MID"}
@@ -475,6 +501,8 @@ function PitchView({
               pos_id={3}
               squad={squad}
               icon_id={5}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
           </div>
           <div className="pitch-section-forwards pitch-section">
@@ -486,6 +514,8 @@ function PitchView({
               pos_id={4}
               squad={squad}
               icon_id={1}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"FOR"}
@@ -495,6 +525,8 @@ function PitchView({
               pos_id={4}
               squad={squad}
               icon_id={2}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
             <PlayerPosition
               pos={"FOR"}
@@ -504,6 +536,8 @@ function PitchView({
               pos_id={4}
               squad={squad}
               icon_id={3}
+              setSquad={setSquad}
+              setAmount={setAmount}
             />
           </div>
         </div>
@@ -520,6 +554,8 @@ function PlayerPosition({
   pos_id,
   squad,
   icon_id,
+  setSquad,
+  setAmount,
 }) {
   const positionKey = positionMap[pos_id];
 
@@ -547,15 +583,31 @@ function PlayerPosition({
         {squad[positionKey][icon_id - 1] === null ? (
           <span>{pos}</span>
         ) : (
-          <PlayerIcon player={squad[positionKey][icon_id - 1]} />
+          <PlayerIcon player={squad[positionKey][icon_id - 1]} setSquad={setSquad} setAmount={setAmount} />
         )}
       </button>
     </div>
   );
 }
 
-function PlayerIcon({ player }) {
+function PlayerIcon({ player, setSquad, setAmount }) {
   console.log(player);
+
+  function removePlayer(player) {
+    setSquad(currentSquad => {
+      const newSquad = { ...currentSquad };
+
+      for (const position in newSquad) {
+        newSquad[position] = newSquad[position].map(slot =>
+          slot?.id === player.id ? null : slot
+        );
+      }
+
+      return newSquad;
+    });
+    setAmount(currentAmount => currentAmount + player.now_cost / 10)
+  }
+
   return (
     <div className="player-inner-icon">
       <div className="player-icon-cost">
@@ -568,6 +620,9 @@ function PlayerIcon({ player }) {
       </div>
       <div className="player-icon-name">
         <p>{player.web_name}</p>
+      </div>
+      <div className="remove-this-player" onClick={() => removePlayer(player)}>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="_18zbdsc1" aria-hidden="true"><path d="M8.70002 8.00002L12.25 11.55L11.55 12.25L8.00002 8.70002L4.35002 12.35L3.65002 11.65L7.30002 8.00002L3.65002 4.35002L4.35002 3.65002L8.00002 7.30002L11.65 3.65002L12.35 4.35002L8.70002 8.00002Z" fill="currentColor"></path></svg>
       </div>
     </div>
   );
